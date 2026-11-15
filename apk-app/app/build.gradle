@@ -1,0 +1,42 @@
+plugins {
+    id 'com.android.application'
+}
+
+// 제출 규칙: 팀명_앱이름_release.apk  ← TEAM_NAME 을 실제 팀명으로 바꾼다
+def TEAM_NAME = "shimpyo-team"
+def APP_NAME = "쉼표"
+
+android {
+    namespace 'com.shimpyo.demo'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.shimpyo.demo"
+        minSdk 28
+        targetSdk 34
+        versionCode 1
+        versionName "0.1.0-prototype"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            // 시연용 프로토타입이라 디버그 키로 서명해 바로 설치·실행 가능하게 한다
+            signingConfig signingConfigs.debug
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    // index.html 이 크므로 압축하지 않고 그대로 넣는다
+    androidResources { noCompress 'html' }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "${TEAM_NAME}_${APP_NAME}_${variant.buildType.name}.apk"
+        }
+    }
+}

@@ -1,0 +1,63 @@
+{
+  "packageName": "com.shimpyo.app",
+  "appDescription": "An in-car rest app that adjusts the seat, climate and lighting while parked or charging and wakes the user when the session ends.",
+  "invokeWord": "쉼표",
+  "version": "1.0.0",
+  "actionCalls": [
+    {
+      "type": "function",
+      "function": {
+        "name": "START_REST_MODE",
+        "description": "Start a rest session in the parked vehicle with the requested rest type and duration.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "restType": {
+              "type": "string",
+              "description": "Type of rest session to start.",
+              "enum": [
+                "nap",
+                "breathing",
+                "stretching"
+              ]
+            },
+            "durationMinutes": {
+              "type": "number",
+              "description": "Length of the rest session in minutes."
+            }
+          },
+          "required": [
+            "restType"
+          ]
+        },
+        "component": "activity"
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "END_REST_MODE",
+        "description": "End the current rest session and restore the seat and climate settings saved before it started.",
+        "parameters": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        },
+        "component": "service"
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "GET_REST_STATUS",
+        "description": "Report the remaining time of the current rest session and the current battery charge level.",
+        "parameters": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        },
+        "component": "service"
+      }
+    }
+  ]
+}

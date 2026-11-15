@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  쉼표 매니페스트 (구조 틀, 아직 빌드하지 않음)
+  - 조회 퍼미션(CAR_*)만 선언한다.
+  - 제어 퍼미션(CONTROL_CAR_*)은 좌석·공조·조명의 정확한 이름을 PleosPermission에서 확인하고
+    Pleos App Market 승인을 받은 뒤 추가한다. 승인되지 않은 퍼미션을 선언하면 앱 심사를 통과할 수 없다.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="pleos.car.permission.CAR_ENERGY" />   <!-- EvBattery -->
+    <uses-permission android:name="pleos.car.permission.CAR_DRIVE" />    <!-- Brake, Odometer -->
+    <uses-permission android:name="pleos.car.permission.CAR_DOORS" />    <!-- Door -->
+    <uses-permission android:name="pleos.car.permission.CAR_SEATS" />    <!-- Seat -->
+    <uses-permission android:name="pleos.car.permission.CAR_CLIMATE" />  <!-- HVAC -->
+    <uses-permission android:name="pleos.car.permission.CAR_LIGHTS" />   <!-- Light -->
+    <!-- TODO: 제어 퍼미션(CONTROL_CAR_*)은 이름 확인과 승인 후 추가 -->
+
+    <application
+        android:label="쉼표"
+        android:allowBackup="false">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <!-- Gleo Action: component "activity" -->
+            <intent-filter>
+                <action android:name="START_REST_MODE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <!--
+          Gleo Action: component "service" (sendBroadcast로 전달)
+          [미확인] 문서에는 activity 선언 예시만 있다. receiver 선언 방식은 Gleo 가이드에서 재확인 필요.
+          안 되면 세 function 모두 activity로 바꾼다.
+        -->
+        <receiver
+            android:name=".gleo.GleoActionReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="END_REST_MODE" />
+                <action android:name="GET_REST_STATUS" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+    </application>
+</manifest>
