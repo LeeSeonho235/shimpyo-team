@@ -42,29 +42,20 @@
 
 ## APK
 
-| 항목 | 내용 |
-| --- | --- |
-| 파일 | [`apk/shimpyo-team_쉼표_release.apk`](apk/) |
-| 내용 | 아래 시연 화면(demo-web)을 앱 안에 넣어 전체 화면 WebView로 띄우는 **UI 프로토타입**입니다. 차량 데이터는 가짜 값이며 Vehicle SDK와 연결되어 있지 않습니다. |
-| 소스 | `apk-app/` (Java, 외부 라이브러리 없음) |
-| 요구 환경 | Android 9(API 28) 이상. 가로 화면으로 실행 |
+이번 제출에는 APK 파일을 포함하지 않았습니다.
 
-### 설치와 실행
-
-```bash
-adb install apk/shimpyo-team_쉼표_release.apk
-```
-
-에뮬레이터 창에 APK 파일을 끌어다 놓아도 설치됩니다. 앱 목록에서 "쉼표"를 실행하면 1번 화면부터 시작하고, 버튼으로 6번 화면까지 이어집니다.
+APK 소스는 `apk-app/`에 있습니다. 아래 시연 화면(demo-web)을 앱 안에 넣어 전체 화면 WebView로 띄우는 **UI 프로토타입**이며, 차량 데이터는 가짜 값이고 Vehicle SDK와 연결되어 있지 않습니다. Android 9(API 28) 이상, 가로 화면 기준입니다.
 
 ### APK 직접 빌드
+
+JDK 17과 Android SDK가 필요합니다.
 
 ```bash
 cd demo-web && npm install && npm run build:apk   # 시연 화면을 apk-app/app/src/main/assets/index.html 한 파일로 빌드
 cd ../apk-app && ./gradlew assembleRelease        # 결과: app/build/outputs/apk/release/
 ```
 
-Android Studio에서 `apk-app` 폴더를 열고 Build → Build App Bundle(s) / APK(s) → Build APK(s)를 눌러도 됩니다. JDK 17이 필요합니다.
+Android Studio에서 `apk-app` 폴더를 열고 빌드해도 됩니다. 만든 APK는 `adb install <파일>`로 설치하거나 에뮬레이터 창에 끌어다 놓으면 설치됩니다.
 
 ## 테스트 환경
 
@@ -98,7 +89,6 @@ npm run dev
 ## 저장소 구성
 
 ```
-apk/                           제출용 APK
 apk-app/                       APK 소스 (시연 화면을 WebView로 띄우는 안드로이드 앱)
 demo-web/                      시연용 화면 (Vite + React + TypeScript)
   src/screens/                 화면 6개
