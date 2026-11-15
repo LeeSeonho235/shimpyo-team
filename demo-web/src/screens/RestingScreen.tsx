@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { DEMO_SPEED } from '../App'
+import { DEMO_SPEED } from '../demo'
 import { REST_LABEL, Session } from '../session'
 import { FakeVehicle, useVehicle } from '../vehicle/FakeVehicle'
 
@@ -16,10 +16,11 @@ export default function RestingScreen({ session, onEnd }: { session: Session; on
     return () => window.clearInterval(t)
   }, [])
 
-  // 타이머 종료 또는 목표 충전량 도달 시 기상 화면으로
+  // 타이머 종료, 또는 휴식 중에 목표 충전량에 도달하면 기상 화면으로
+  const startedBelowTarget = useRef(FakeVehicle.get().batteryLevel < FakeVehicle.get().targetLevel).current
   useEffect(() => {
-    if (left === 0 || v.batteryLevel >= v.targetLevel) onEnd()
-  }, [left, v.batteryLevel, v.targetLevel, onEnd])
+    if (left === 0 || (startedBelowTarget && v.batteryLevel >= v.targetLevel)) onEnd()
+  }, [left, v.batteryLevel, v.targetLevel, onEnd, startedBelowTarget])
 
   const mm = String(Math.floor(left / 60)).padStart(2, '0')
   const ss = String(left % 60).padStart(2, '0')

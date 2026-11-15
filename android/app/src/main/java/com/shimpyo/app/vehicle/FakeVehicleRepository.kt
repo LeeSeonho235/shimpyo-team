@@ -4,6 +4,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.distinctUntilChanged
 
 /**
  * 1단계(UI 프로토타입)용 가짜 구현.
@@ -27,8 +29,6 @@ class FakeVehicleRepository(
 
     override suspend fun getCapabilities() = capabilities
 
-    override val chargeState: Flow<ChargeState> = MutableStateFlow(ChargeState.CHARGING)
-
     override val batteryLevel: Flow<Int?> = flow {
         var level = 63
         while (level < 100) {
@@ -38,6 +38,11 @@ class FakeVehicleRepository(
         }
         emit(100)
     }
+
+    /** 충전량이 목표(80%)에 닿으면 COMPLETED 를 내보낸다. 자동 기상 흐름 확인용 */
+    override val chargeState: Flow<ChargeState> = batteryLevel
+        .map { if ((it ?: 0) >= TARGET_LEVEL) ChargeState.COMPLETED else ChargeState.CHARGING }
+        .distinctUntilChanged()
 
     override val parkingBrakeOn: Flow<Boolean?> = MutableStateFlow(true)
 
@@ -55,4 +60,6 @@ class FakeVehicleRepository(
 
     override suspend fun getAmbientBrightness(): Int? = light
     override suspend fun setAmbientBrightness(value: Int) = runCatching { light = value }
+
+    private companion object { const val TARGET_LEVEL = 80 }
 }

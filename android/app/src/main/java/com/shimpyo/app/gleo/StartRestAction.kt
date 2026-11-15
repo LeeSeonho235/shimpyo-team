@@ -25,8 +25,11 @@ object StartRestAction {
         )
     }
 
-    /** @return 휴식을 시작해도 되면 true */
-    fun respond(context: Context, req: Request, isParked: Boolean): Boolean {
+    /**
+     * @param isParked 주차 브레이크 상태. null 이면 확인 불가로 보고 시작하지 않는다
+     * @return 휴식을 시작해도 되면 true. 호출한 쪽은 true 일 때만 세션을 시작한다
+     */
+    fun respond(context: Context, req: Request, isParked: Boolean?): Boolean {
         val responder = GleoResponder(context)
         return when {
             req.restType == null -> {
@@ -34,6 +37,14 @@ object StartRestAction {
                     GleoFunctions.START_REST_MODE, GleoStatus.ASKING,
                     "The rest type is required to start rest mode.",
                     data = """[{"missingField":"restType"}]""",
+                )
+                false
+            }
+            isParked == null -> {
+                // 차량 상태를 읽을 수 없으면 시작했다고 응답하지 않는다
+                responder.send(
+                    GleoFunctions.START_REST_MODE, GleoStatus.FAIL,
+                    "The parking state cannot be checked, so rest mode was not started.",
                 )
                 false
             }

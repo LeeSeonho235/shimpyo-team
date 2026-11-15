@@ -24,9 +24,11 @@ class MainActivity : ComponentActivity() {
 
     private fun handleGleo(intent: Intent?) {
         val req = StartRestAction.parse(intent) ?: return
-        val parked = true // TODO: VehicleRepository.parkingBrakeOn 값으로 대체 (Brake)
+        // 1단계: 차량(Brake)과 세션이 아직 연결되지 않아 주차 여부를 알 수 없다 → null 로 넘겨 실패 응답
+        // TODO(2단계): VehicleRepository.parkingBrakeOn 의 최신 값 사용
+        val parked: Boolean? = null
         if (StartRestAction.respond(this, req, parked)) {
-            // TODO: RestSessionController.start(...) 연결
+            // TODO(2단계): RestSessionController.start(...) 연결. 연결 전에는 여기에 도달하지 않는다
         }
     }
 }

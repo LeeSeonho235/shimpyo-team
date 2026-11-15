@@ -18,24 +18,20 @@ class GleoActionReceiver : BroadcastReceiver() {
         Log.d(TAG, "action=${intent.action} param=$raw")
         val responder = GleoResponder(context)
 
+        // 1단계(UI 프로토타입): 휴식 세션과 차량이 아직 연결되지 않았다.
+        // 실제로 실행하지 않은 작업을 success 로 응답하지 않는다.
+        // TODO(2단계): RestSessionController 연결 후 end() / 상태 조회 결과로 응답
         when (intent.action) {
-            GleoFunctions.END_REST_MODE -> {
-                // TODO: RestSessionController.end() 연결. 진행 중인 휴식이 없으면 fail
-                responder.send(
-                    functionName = GleoFunctions.END_REST_MODE,
-                    status = GleoStatus.SUCCESS,
-                    message = "Rest mode has ended and the seat is being restored.",
-                )
-            }
-            GleoFunctions.GET_REST_STATUS -> {
-                // TODO: 실제 남은 시간과 충전량 연결
-                responder.send(
-                    functionName = GleoFunctions.GET_REST_STATUS,
-                    status = GleoStatus.SUCCESS,
-                    message = "The rest session status was retrieved.",
-                    data = """[{"remainingMinutes":12,"batteryLevel":74}]""",
-                )
-            }
+            GleoFunctions.END_REST_MODE -> responder.send(
+                functionName = GleoFunctions.END_REST_MODE,
+                status = GleoStatus.FAIL,
+                message = "Rest mode control is not connected to the vehicle yet.",
+            )
+            GleoFunctions.GET_REST_STATUS -> responder.send(
+                functionName = GleoFunctions.GET_REST_STATUS,
+                status = GleoStatus.FAIL,
+                message = "Rest session status is not available yet.",
+            )
         }
     }
 

@@ -7,6 +7,7 @@ import PreparingScreen from './screens/PreparingScreen'
 import RestingScreen from './screens/RestingScreen'
 import WakeScreen from './screens/WakeScreen'
 import DrivingSuggestScreen from './screens/DrivingSuggestScreen'
+import { FakeVehicle } from './vehicle/FakeVehicle'
 
 export type ScreenNo = 1 | 2 | 3 | 4 | 5 | 6
 /** 완전/부분/기본 모드. 실제 앱에서는 capability 확인 결과로 정해진다 */
@@ -24,8 +25,6 @@ function readMode(): Mode {
   return m === 'partial' || m === 'basic' ? m : 'full'
 }
 
-/** 시연 배속. ?speed=60 이면 휴식 타이머가 60배 빠르게 흐른다 */
-export const DEMO_SPEED = Math.max(1, Number(params.get('speed')) || 1)
 
 function useFrameScale() {
   const calc = () => Math.min(1, window.innerWidth / 1280, window.innerHeight / 720)
@@ -45,6 +44,8 @@ export default function App() {
   const scale = useFrameScale()
 
   const go = (n: ScreenNo) => {
+    // 첫 화면으로 돌아오면 시연 상태를 처음으로 되돌린다 (반복 시연용)
+    if (n === 1) FakeVehicle.reset()
     setScreen(n)
     const url = new URL(window.location.href)
     url.searchParams.set('screen', String(n))
